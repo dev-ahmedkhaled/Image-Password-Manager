@@ -1,18 +1,15 @@
-%% Octave AES-256 Encryption Script
-% Location: Encode/encode_json_to_hash.m
-
 function ciphertext = encode_json_to_hash(json_path, pass)
     % ENCODE_JSON_TO_HASH Encrypts a JSON file using AES-256-CBC via OpenSSL.
     %
     % Usage:
     %   out = encode_json_to_hash()                   % Uses defaults
     %   out = encode_json_to_hash("data.json", "key") % Manual paths/pass
-    
+
     % 1. Handle Default Parameters
     if nargin < 1 || isempty(json_path)
         json_path = "../Passwords/secrets.json";
     end
-    
+
     if nargin < 2 || isempty(pass)
         % Default to the correctpass.txt file if no password provided
         pass = "../Passwords/correctpass.txt";
@@ -39,19 +36,19 @@ function ciphertext = encode_json_to_hash(json_path, pass)
     % -A: Ensure the Base64 output is on a single line
     % -salt: Standard security practice to prevent rainbow table attacks
     % -pbkdf2: Standard key derivation (modern security requirement)
-    
+
     fprintf("Encrypting: %s\n", json_path);
-    
+
     % We use temporary files to pass data to OpenSSL securely
     tmp_json = [tempname(), ".json"];
     copyfile(json_path, tmp_json);
-    
+
     % Build the system command
     cmd = sprintf('openssl enc -aes-256-cbc -salt -pbkdf2 -a -A -in "%s" -pass pass:"%s"', ...
                   tmp_json, master_key);
-    
+
     [status, ciphertext] = system(cmd);
-    
+
     % Cleanup temp file
     delete(tmp_json);
 

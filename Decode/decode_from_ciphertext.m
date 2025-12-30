@@ -29,12 +29,12 @@ function plaintext = decode_from_hash(ciphertext, pass)
     % -d: Decrypt flag
     % -a -A: Tell OpenSSL the input is a single-line Base64 string
     % 2>/dev/null: Suppress error messages from the terminal for a cleaner Octave experience
-    
+
     cmd = sprintf('openssl enc -aes-256-cbc -d -salt -pbkdf2 -a -A -in "%s" -pass pass:"%s" 2>/dev/null', ...
                   tmp_cipher, master_key);
-    
+
     [status, plaintext] = system(cmd);
-    
+
     % Cleanup temp file
     if exist(tmp_cipher, 'file')
         delete(tmp_cipher);

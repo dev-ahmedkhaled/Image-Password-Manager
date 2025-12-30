@@ -29,14 +29,14 @@ end
 fprintf("\n--- Attempting Decryption with CORRECT password ---\n");
 try
     decrypted_json = decode_from_hash(ciphertext, correct_key_file);
-    
+
     % Convert JSON string to Octave Struct
     data = jsondecode(decrypted_json);
-    
+
     % FIX: Use (1) instead of {1}
     disp(decrypted_json); % This prints the raw string
     # fprintf("Entry 1 Title: %s\n", data.password_manager.entries(1).title);
-    
+
     fprintf("Decryption successful!\n");
 catch ME
     fprintf("[SYSTEM NOTE] Unexpected failure: %s\n", ME.message);
