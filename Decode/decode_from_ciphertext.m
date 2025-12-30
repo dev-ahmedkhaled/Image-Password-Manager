@@ -1,9 +1,9 @@
-function plaintext = decode_from_hash(ciphertext, pass)
-    % DECODE_FROM_HASH Decrypts an AES-256-CBC string back to JSON.
+function plaintext = decode_from_ciphertext(ciphertext, pass)
+    % decode_from_ciphertext Decrypts an AES-256-CBC string back to JSON.
     %
     % Usage:
-    %   json_str = decode_from_hash(ciphertext, "mykey")
-    %   json_str = decode_from_hash(ciphertext, "../Passwords/correctpass.txt")
+    %   json_str = decode_from_ciphertext(ciphertext, "mykey")
+    %   json_str = decode_from_ciphertext(ciphertext, "../Passwords/correctpass.txt")
 
     % 1. Handle Default Password if not provided
     if nargin < 2 || isempty(pass)

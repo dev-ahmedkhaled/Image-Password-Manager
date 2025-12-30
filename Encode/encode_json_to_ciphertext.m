@@ -1,9 +1,9 @@
-function ciphertext = encode_json_to_hash(json_path, pass)
-    % ENCODE_JSON_TO_HASH Encrypts a JSON file using AES-256-CBC via OpenSSL.
+function ciphertext = encode_json_to_ciphertext(json_path, pass)
+    % encode_json_to_ciphertext Encrypts a JSON file using AES-256-CBC via OpenSSL.
     %
     % Usage:
-    %   out = encode_json_to_hash()                   % Uses defaults
-    %   out = encode_json_to_hash("data.json", "key") % Manual paths/pass
+    %   out = encode_json_to_ciphertext()                   % Uses defaults
+    %   out = encode_json_to_ciphertext("data.json", "key") % Manual paths/pass
 
     % 1. Handle Default Parameters
     if nargin < 1 || isempty(json_path)

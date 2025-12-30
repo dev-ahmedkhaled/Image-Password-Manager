@@ -1,6 +1,6 @@
 In an Octave (MATLAB-compatible) context, we need a standalone script that encrypts a JSON file using AES-256, the gold standard for symmetric encryption in this use case. RSA is impractical here due to its slow speed and limited data size, making AES-256 the optimal choice for encrypting bulk data like JSON files.
 
-The goal is to create a function, `encode_json_to_hash`, that:
+The goal is to create a function, `encode_json_to_ciphertext`, that:
 - Takes a JSON file as input (defaulting to `../Passwords/secrets.json` if no file is specified).
 - Encrypts the JSON content using AES-256, with the encryption key derived from a master password (read from `../Passwords/correctpass.txt` or provided directly as a string).
 - Outputs an encrypted hash of the JSON data.
@@ -13,12 +13,12 @@ The goal is to create a function, `encode_json_to_hash`, that:
 The project directory is organized as follows:
 ```
 Decode/
-    decode_from_Hash.m
+    decode_from_ciphertext.m
     decode_from_image.m
 Docs/
-    think_Encode_json_to_hash.md
+    think_encode_json_to_ciphertext.md
 Encode/
-    encode_json_to_hash.m
+    encode_json_to_ciphertext.m
     encode_to_image.m
 images/
     nature.jpg
@@ -55,7 +55,7 @@ Passwords/
 
 ### Function Signature:
 ```m
-function encrypted_data = encode_json_to_hash(jsonpath, pass)
+function encrypted_data = encode_json_to_ciphertext(jsonpath, pass)
 ```
 - `jsonpath`: Path to the JSON file (defaults to `../Passwords/secrets.json` if not provided).
 - `pass`: Master password, either as a string or a path to a `.txt` file.
@@ -70,14 +70,14 @@ function encrypted_data = encode_json_to_hash(jsonpath, pass)
 ### Example Workflow:
 ```m
 % Encrypt using a password string
-encrypted_data = encode_json_to_hash("../Passwords/secrets.json", "my_master_password");
+encrypted_data = encode_json_to_ciphertext("../Passwords/secrets.json", "my_master_password");
 
 % Encrypt using a password file
-encrypted_data = encode_json_to_hash("../Passwords/secrets.json", "../Passwords/correctpass.txt");
+encrypted_data = encode_json_to_ciphertext("../Passwords/secrets.json", "../Passwords/correctpass.txt");
 ```
 
 ### Dependencies:
 - Octave’s `jsondecode` for parsing JSON.
 - A method for AES-256 encryption (e.g., via OpenSSL or a custom Octave implementation).
 
-Would you like me to draft the actual Octave code for `encode_json_to_hash.m` next, or clarify any part of the workflow?
+Would you like me to draft the actual Octave code for `encode_json_to_ciphertext.m` next, or clarify any part of the workflow?
