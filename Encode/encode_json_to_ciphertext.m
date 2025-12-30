@@ -56,6 +56,9 @@ function ciphertext = encode_json_to_ciphertext(json_path, pass)
         error("Encryption failed. Check if OpenSSL is installed and the key is valid.");
     end
 
+    % Remove trailing newline from system() output
+    ciphertext = strtrim(ciphertext);
+
     % Display result
     fprintf("--- Encrypted Output ---\n%s\n------------------------\n", ciphertext);
 end
