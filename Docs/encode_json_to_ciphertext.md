@@ -238,6 +238,7 @@ For i = 1 to 10,000:
 This means every password attempt takes 10,000x longer to test.
 
 **Real-world impact**:
+
 - Direct hash: Attacker tries 1 billion passwords/second
 - With PBKDF2: Attacker tries 100,000 passwords/second (10,000x slower)
 
@@ -256,6 +257,7 @@ Block 3: Encrypt(Data3 ⊕ Cipher2) → Cipher3
 **⊕ = XOR operation** (exclusive OR)
 
 **Why this matters**: 
+
 - If you change one character in your data, ALL subsequent blocks change
 - Makes pattern analysis impossible
 - Prevents attackers from seeing repeated patterns
