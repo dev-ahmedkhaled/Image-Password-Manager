@@ -26,6 +26,7 @@ T = sqrt(2/n) * cos(π * (2*cols + 1) * rows / (2*n))
 ```
 
 **Simple explanation**: 
+
 - Creates an 8×8 special matrix filled with cosine values
 - This matrix is like a "translator" that converts pixel values into frequency values
 - The first row is divided by √2 for normalization (mathematical balancing)
@@ -38,6 +39,7 @@ T = sqrt(2/n) * cos(π * (2*cols + 1) * rows / (2*n))
 **Purpose**: Converts an entire image into DCT coefficients
 
 **Steps**:
+
 1. **Load the image** from the file path
 2. **Convert to grayscale** if it's colored (RGB → single channel)
 3. **Resize** to make dimensions multiples of 8 (required for 8×8 blocks)
@@ -45,11 +47,13 @@ T = sqrt(2/n) * cos(π * (2*cols + 1) * rows / (2*n))
 5. **Apply DCT** to each block separately
 
 **Why 8×8 blocks?**
+
 - Standard size used in JPEG compression
 - Good balance between efficiency and quality
 - Each block can be processed independently
 
 **Returns**: A structure containing:
+
 - `blocks`: DCT coefficients for all 8×8 blocks
 - `rows`, `cols`: Image dimensions
 - `originalImage`: The processed grayscale image
@@ -63,12 +67,15 @@ T = sqrt(2/n) * cos(π * (2*cols + 1) * rows / (2*n))
 ```
 DCT_block = T × Block × T'
 ```
+
 Where:
+
 - `T` = DCT transformation matrix
 - `Block` = 8×8 pixel values (0-255)
 - `T'` = Transpose of T (flipped matrix)
 
 **Simple explanation**:
+
 - Takes pixel values (like 150, 200, 75...)
 - Transforms them into frequency coefficients
 - Top-left coefficient = average brightness (DC coefficient)
@@ -85,6 +92,7 @@ Block = T' × DCT_block × T
 ```
 
 **Simple explanation**:
+
 - Reverses the DCT process
 - Takes frequency coefficients
 - Reconstructs the original 8×8 pixel blocks
@@ -96,6 +104,7 @@ Block = T' × DCT_block × T
 **Purpose**: High-level function to reconstruct the full image
 
 **Steps**:
+
 1. Calls `blockIDCT()` to convert all blocks
 2. **Clamps values** to 0-255 range (prevents invalid pixel values)
 3. Returns the reconstructed image
@@ -106,6 +115,7 @@ Block = T' × DCT_block × T
 **Purpose**: Returns the positions in an 8×8 DCT block where we'll hide data
 
 **Why mid-frequencies?**
+
 - **Low frequencies** (top-left): Too important for image quality
 - **High frequencies** (bottom-right): Often removed by compression
 - **Mid frequencies**: Perfect balance - can be modified without visible changes
@@ -137,6 +147,7 @@ PSNR = 10 × log₁₀(255² / MSE)
 - Higher PSNR = Better quality
 
 **Quality interpretation**:
+
 - **PSNR > 40 dB**: Excellent - changes are invisible
 - **PSNR > 30 dB**: Good - minor differences
 - **PSNR < 30 dB**: Poor - visible differences
@@ -161,6 +172,7 @@ PSNR = 10 × log₁₀(255² / MSE)
 ```
 
 **Key observations**:
+
 - First value (1200.5) = DC coefficient = average brightness
 - Values decrease towards bottom-right (high frequencies)
 - Small coefficients can be modified without affecting image quality
@@ -188,6 +200,7 @@ metrics = calculateQualityMetrics(original, reconstructed);
 ## Why This Module Exists
 
 This module is the foundation for steganography (hiding data in images):
+
 1. Convert image to frequency domain (DCT)
 2. Modify mid-frequency coefficients to hide data
 3. Convert back to pixel domain
