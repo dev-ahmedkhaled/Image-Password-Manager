@@ -17,7 +17,7 @@ function ciphertext = decode_from_image(stego_image_path)
     current_dir = pwd;
     modules_dir = "";
     modules_added = false;
-    
+
     % Check if modules/dct_transform.m exists in common locations
     % 1. Relative to current directory
     if exist(fullfile(current_dir, "modules", "dct_transform.m"), "file")
@@ -35,7 +35,7 @@ function ciphertext = decode_from_image(stego_image_path)
             modules_added = true;
         end
     end
-    
+
     if modules_added && exist(modules_dir, "dir")
         % Check if already in path
         path_cell = strsplit(path(), pathsep());
@@ -44,7 +44,7 @@ function ciphertext = decode_from_image(stego_image_path)
             fprintf("Added modules path: %s\n", modules_dir);
         end
     end
-    
+
     pkg load image;
 
     % 1. Validate input

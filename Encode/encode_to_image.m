@@ -19,7 +19,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
     current_dir = pwd;
     modules_dir = "";
     modules_added = false;
-    
+
     % Check if modules/dct_transform.m exists in common locations
     % 1. Relative to current directory
     if exist(fullfile(current_dir, "modules", "dct_transform.m"), "file")
@@ -37,7 +37,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
             modules_added = true;
         end
     end
-    
+
     if modules_added && exist(modules_dir, "dir")
         % Check if already in path
         path_cell = strsplit(path(), pathsep());
@@ -46,7 +46,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
             fprintf("Added modules path: %s\n", modules_dir);
         end
     end
-    
+
     pkg load image;
 
     % 1. Handle default output path
@@ -66,7 +66,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
 
     fprintf('\n=== Encoding Ciphertext into Image ===\n');
     fprintf('Cover image: %s\n', cover_image_path);
-    
+
     % 3. Clean and convert ciphertext string to uint8 array
     % Remove any trailing newlines/whitespace from OpenSSL output
     ciphertext = strtrim(ciphertext);
@@ -80,12 +80,12 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
 
     % 4. Load and convert image to DCT domain
     fprintf('\nStep 1: Converting image to DCT domain...\n');
-    
+
     % Find and ensure dct_transform.m is accessible
     path_list = strsplit(path(), pathsep());
     dct_file_path = "";
     modules_dir = "";
-    
+
     % Find dct_transform.m file in path
     for i = 1:length(path_list)
         test_path = fullfile(path_list{i}, "dct_transform.m");
@@ -95,7 +95,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
             break;
         end
     end
-    
+
     % If not found in path, try to find it and add to path
     if isempty(dct_file_path)
         current_dir = pwd;
@@ -109,11 +109,11 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
             dct_file_path = fullfile(modules_dir, "dct_transform.m");
         end
     end
-    
+
     if isempty(dct_file_path) || ~exist(dct_file_path, "file")
         error("Cannot find dct_transform.m file. Please ensure modules/dct_transform.m exists.");
     end
-    
+
     % In Octave, functions in multi-function files sometimes need special handling
     % Convert cover_image_path to absolute path to avoid issues when changing directories
     if (ispc() && length(cover_image_path) >= 2 && cover_image_path(2) == ':') || ...
@@ -124,17 +124,17 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
         % Relative path - make it absolute
         abs_cover_path = fullfile(pwd, cover_image_path);
     end
-    
+
     % In Octave, multi-function files need special handling
     % The issue is that Octave doesn't always parse multi-function files correctly
     % We'll change to the modules directory and use eval to force parsing
     old_dir = pwd;
     cd(modules_dir);
-    
+
     try
         % First, try to check if function exists (this sometimes triggers parsing)
         func_check = exist("imageToDCT");
-        
+
         % Try calling the function
         if func_check > 0
             % Function exists in Octave's function cache
@@ -168,13 +168,13 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
             error("imageToDCT function not accessible.\nError 1: %s\nError 2: %s", ME.message, ME2.message);
         end
     end
-    
+
     % Return to original directory
     cd(old_dir);
 
     % 5. Embed ciphertext into DCT coefficients
     fprintf('\nStep 2: Embedding ciphertext into DCT coefficients...\n');
-    
+
     % Ensure steganography functions are accessible
     % Use the same modules_dir we found earlier (from DCT processing)
     old_dir2 = pwd;
@@ -188,7 +188,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
         end
         cd(old_dir2);
     end
-    
+
     % Now try calling embedData
     try
         modifiedDCT = embedData(dctCoeffs, ciphertext_bytes);
@@ -219,7 +219,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
 
     % 6. Reconstruct image from modified DCT
     fprintf('\nStep 3: Reconstructing stego image...\n');
-    
+
     % dctToImage should be available from dct_transform.m (already loaded)
     try
         stego_image = dctToImage(modifiedDCT);
@@ -255,7 +255,7 @@ function [stego_image,stego_image_path] = encode_to_image(ciphertext, cover_imag
     %min_rows = min(orig_rows, stego_rows);
     %min_cols = min(orig_cols, stego_cols);
     original_processed = dctCoeffs.originalImage;
-    
+
     metrics = calculateQualityMetrics(...
         double(original_processed), ...
         double(stego_image));

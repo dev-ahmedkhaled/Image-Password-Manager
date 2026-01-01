@@ -8,9 +8,9 @@ function encryption_decryption_gui()
     addpath(fullfile(project_root, 'Decode'));
 
     % Internal State: This holds your list of passwords in memory
-    vault_data = struct('entries', []); 
-    ciphertext = ""; 
-    
+    vault_data = struct('entries', []);
+    ciphertext = "";
+
     stego_output = "images/nature_stego.png";
     cover_image  = "images/nature.jpg";
     key_file     = "Passwords/correctpass.txt";
@@ -54,12 +54,12 @@ function encryption_decryption_gui()
         t = get(edit_title, 'string');
         p = get(edit_pass, 'string');
         if isempty(t) || isempty(p), return; end
-        
+
         % Add to the struct
         new_idx = length(vault_data.entries) + 1;
         vault_data.entries(new_idx).title = t;
         vault_data.entries(new_idx).password = p;
-        
+
         update_ui_list();
         set(edit_title, 'string', ''); set(edit_pass, 'string', '');
         update_log("Added: " + t);
@@ -87,16 +87,16 @@ function encryption_decryption_gui()
         try
             % 1. Convert struct to JSON string
             json_str = jsonencode(vault_data);
-            
+
             % 2. Save temporary JSON to encrypt it
             temp_json = 'Passwords/temp_gui.json';
             fid = fopen(temp_json, 'w'); fprintf(fid, '%s', json_str); fclose(fid);
-            
+
             % 3. Encrypt and Embed
             ciphertext = encode_json_to_ciphertext(temp_json, key_file);
             stego_img = encode_to_image(ciphertext, cover_image);
             imwrite(uint8(stego_img), stego_output);
-            
+
             delete(temp_json);
             update_log("VAULT LOCKED: Data hidden in " + stego_output);
         catch ME, update_log("ERROR: " + ME.message); end
@@ -107,7 +107,7 @@ function encryption_decryption_gui()
             update_log("Extracting from image...");
             extracted_cipher = decode_from_image(stego_output);
             json_str = decode_from_ciphertext(extracted_cipher, key_file);
-            
+
             % Sync memory with extracted data
             vault_data = jsondecode(json_str);
             update_ui_list();

@@ -51,11 +51,11 @@ fprintf('\nStep 2: Embedding data into %s...\n', cover_image);
 try
     % This function handles the DCT conversion, embedding, and reconstruction
     stego_image = encode_to_image(ciphertext, cover_image);
-    
+
     % 3. Save the final Stego Image
     imwrite(uint8(stego_image), stego_output);
     fprintf('✓ Success! Vault saved to: %s\n', stego_output);
-    
+
 catch ME
     error('Embedding failed: %s', ME.message);
 end

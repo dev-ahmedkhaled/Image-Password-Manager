@@ -50,9 +50,9 @@ function dctBlocks = blockDCT(img)
     numBlocksRow = rows/8;
     numBlocksCol = cols/8;
     dctBlocks = zeros(8, 8, numBlocksRow*numBlocksCol);
-    
+
     % Use the manual function we created below
-    T = manual_dctmtx(8); 
+    T = manual_dctmtx(8);
 
     blockIndex = 1;
     for i = 1:numBlocksRow
@@ -60,7 +60,7 @@ function dctBlocks = blockDCT(img)
             rowStart = (i-1)*8+1;
             colStart = (j-1)*8+1;
             block = img(rowStart:rowStart+7, colStart:colStart+7);
-            
+
             % Standard 2D DCT formula
             dctBlocks(:,:,blockIndex) = T * double(block) * T';
             blockIndex = blockIndex + 1;
@@ -72,7 +72,7 @@ function img = blockIDCT(dctBlocks, rows, cols)
     numBlocksRow = rows / 8;
     numBlocksCol = cols / 8;
     img = zeros(rows, cols);
-    
+
     T = manual_dctmtx(8);
 
     blockIndex = 1;
@@ -80,7 +80,7 @@ function img = blockIDCT(dctBlocks, rows, cols)
         for j = 1:numBlocksCol
             % Standard 2D Inverse DCT formula
             block = T' * double(dctBlocks(:,:,blockIndex)) * T;
-            
+
             rowStart = (i - 1) * 8 + 1;
             colStart = (j - 1) * 8 + 1;
             img(rowStart:rowStart + 7, colStart:colStart + 7) = block;
